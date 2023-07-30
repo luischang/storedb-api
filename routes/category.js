@@ -24,10 +24,8 @@ const categoryController = require('../controllers/categoryController');
  *         description: Error al obtener las categorías
  */
 router.get('/', async (req, res) => {
-    console.log("XXXX")
   try {
     const categories = await categoryController.getAllCategories();
-    console.log("XXXX")
     res.json(categories);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener las categorías' });
