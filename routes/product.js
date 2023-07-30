@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/productController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
@@ -23,7 +24,7 @@ const productController = require('../controllers/productController');
  *       '500':
  *         description: Error al obtener los productos
  */
-router.get('/', async (req, res) => {
+router.get('/', authMiddleware, async (req, res) => {
   try {
     const products = await productController.getAllProducts();
     res.json(products);
@@ -53,7 +54,7 @@ router.get('/', async (req, res) => {
  *       '500':
  *         description: Error al obtener el producto
  */
-router.get('/:id', async (req, res) => {
+router.get('/:id', authMiddleware, async (req, res) => {
   const productId = req.params.id;
   try {
     const product = await productController.getProductById(productId);
@@ -116,7 +117,7 @@ router.get('/:id', async (req, res) => {
  *       '500':
  *         description: Error al crear el producto
  */
-router.post('/', async (req, res) => {
+router.post('/', authMiddleware, async (req, res) => {
   try {
     const newProductId = await productController.createProduct(req.body);
     res.status(201).json({ id: newProductId });
@@ -173,7 +174,7 @@ router.post('/', async (req, res) => {
  *       '500':
  *         description: Error al actualizar el producto
  */
-router.put('/:id', async (req, res) => {
+router.put('/:id', authMiddleware, async (req, res) => {
   const productId = req.params.id;
   try {
     const updated = await productController.updateProduct(productId, req.body);
@@ -208,7 +209,7 @@ router.put('/:id', async (req, res) => {
  *       '500':
  *         description: Error al eliminar el producto
  */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
   const productId = req.params.id;
   try {
     const deleted = await productController.deleteProduct(productId);

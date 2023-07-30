@@ -3,6 +3,9 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
@@ -76,7 +79,7 @@ router.post('/', async (req, res) => {
  *       '500':
  *         description: Error al obtener la lista de usuarios.
  */
-router.get('/', async (req, res) => {
+router.get('/', authMiddleware, async (req, res) => {
   try {
     const users = await userController.getAllUsers();
     res.json(users);
@@ -107,7 +110,7 @@ router.get('/', async (req, res) => {
  *       '500':
  *         description: Error al obtener el usuario.
  */
-router.get('/:id', async (req, res) => {
+router.get('/:id', authMiddleware, async (req, res) => {
   const userId = req.params.id;
   try {
     const user = await userController.getUserById(userId);
@@ -170,7 +173,7 @@ router.get('/:id', async (req, res) => {
  *       '500':
  *         description: Error al actualizar el usuario.
  */
-router.put('/:id', async (req, res) => {
+router.put('/:id', authMiddleware, async (req, res) => {
   const userId = req.params.id;
   try {
     const updated = await userController.updateUser(userId, req.body);
@@ -206,7 +209,7 @@ router.put('/:id', async (req, res) => {
  *       '500':
  *         description: Error al eliminar el usuario.
  */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
   const userId = req.params.id;
   try {
     const deleted = await userController.deleteUser(userId);
@@ -217,6 +220,70 @@ router.delete('/:id', async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: 'Error al eliminar el usuario' });
+  }
+});
+
+/**
+ * @swagger
+ * /users/signin:
+ *   post:
+ *     summary: Iniciar sesión de usuario
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *             example:
+ *               email: user@example.com
+ *               password: secretpassword
+ *     responses:
+ *       '200':
+ *         description: Inicio de sesión exitoso, devuelve información básica del usuario y un JWT
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 firstName:
+ *                   type: string
+ *                 lastName:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 token:
+ *                   type: string
+ *             example:
+ *               id: 1
+ *               firstName: John
+ *               lastName: Doe
+ *               email: user@example.com
+ *               token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTYyOTMyMzExN30.HJIRLmfQHX_vFCsC2LlQ9a39i0eC5wGPQFoyV0QH2Z0
+ *       '401':
+ *         description: Credenciales de inicio de sesión incorrectas
+ *       '500':
+ *         description: Error al iniciar sesión
+ */
+router.post('/signin', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const userWithToken = await userController.signIn(email, password);
+    if (!userWithToken) {
+      res.status(401).json({ error: 'Credenciales de inicio de sesión incorrectas' });
+    } else {
+      res.json(userWithToken);
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Error al iniciar sesión' });
   }
 });
 
