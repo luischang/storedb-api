@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const categoryController = require('../controllers/categoryController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
@@ -23,7 +24,7 @@ const categoryController = require('../controllers/categoryController');
  *       '500':
  *         description: Error al obtener las categorías
  */
-router.get('/', async (req, res) => {
+router.get('/', authMiddleware, async (req, res) => {
   try {
     const categories = await categoryController.getAllCategories();
     res.json(categories);
@@ -53,7 +54,7 @@ router.get('/', async (req, res) => {
  *       '500':
  *         description: Error al obtener la categoría
  */
-router.get('/:id', async (req, res) => {
+router.get('/:id', authMiddleware, async (req, res) => {
   const categoryId = req.params.id;
   try {
     const category = await categoryController.getCategoryById(categoryId);
@@ -88,7 +89,7 @@ router.get('/:id', async (req, res) => {
  *       '500':
  *         description: Error al obtener la categoría
  */
-router.get('/:id/products', async (req, res) => {
+router.get('/:id/products', authMiddleware, async (req, res) => {
     const categoryId = req.params.id;
     try {
       const categoryWithProducts = await categoryController.getCategoryWithProducts(categoryId);
@@ -139,7 +140,7 @@ router.get('/:id/products', async (req, res) => {
  *       '500':
  *         description: Error al crear la categoría
  */
-router.post('/', async (req, res) => {
+router.post('/', authMiddleware, async (req, res) => {
   try {
     const newCategoryId = await categoryController.createCategory(req.body);
     res.status(201).json({ id: newCategoryId });
@@ -181,7 +182,7 @@ router.post('/', async (req, res) => {
  *       '500':
  *         description: Error al actualizar la categoría
  */
-router.put('/:id', async (req, res) => {
+router.put('/:id', authMiddleware, async (req, res) => {
     const categoryId = req.params.id;
     try {
       const updated = await categoryController.updateCategory(categoryId, req.body);
@@ -216,7 +217,7 @@ router.put('/:id', async (req, res) => {
  *       '500':
  *         description: Error al eliminar la categoría
  */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
   const categoryId = req.params.id;
   try {
     const deleted = await categoryController.deleteCategory(categoryId);
