@@ -70,14 +70,15 @@ router.post('/', async (req, res) => {
  * @swagger
  * /users:
  *   get:
- *     summary: Obtiene todos los usuarios
- *     description: Obtiene una lista de todos los usuarios registrados.
+ *     summary: Obtener todos los usuarios
  *     tags: [Users]
  *     responses:
  *       '200':
- *         description: Lista de usuarios obtenida exitosamente.
+ *         description: Lista de usuarios
+ *       '401':
+ *         description: No autorizado
  *       '500':
- *         description: Error al obtener la lista de usuarios.
+ *         description: Error al obtener los usuarios
  */
 router.get('/', authMiddleware, async (req, res) => {
   try {
@@ -240,37 +241,17 @@ router.delete('/:id', authMiddleware, async (req, res) => {
  *                 type: string
  *               password:
  *                 type: string
- *             example:
- *               email: user@example.com
- *               password: secretpassword
+ *             required:
+ *               - email
+ *               - password
  *     responses:
  *       '200':
- *         description: Inicio de sesión exitoso, devuelve información básica del usuario y un JWT
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: integer
- *                 firstName:
- *                   type: string
- *                 lastName:
- *                   type: string
- *                 email:
- *                   type: string
- *                 token:
- *                   type: string
- *             example:
- *               id: 1
- *               firstName: John
- *               lastName: Doe
- *               email: user@example.com
- *               token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTYyOTMyMzExN30.HJIRLmfQHX_vFCsC2LlQ9a39i0eC5wGPQFoyV0QH2Z0
+ *         description: Inicio de sesión exitoso
  *       '401':
- *         description: Credenciales de inicio de sesión incorrectas
+ *         description: Credenciales inválidas
  *       '500':
  *         description: Error al iniciar sesión
+ *     security: []
  */
 router.post('/signin', async (req, res) => {
   const { email, password } = req.body;

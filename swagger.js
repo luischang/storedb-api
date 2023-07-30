@@ -18,6 +18,16 @@ const options = {
         url: environment === 'production' ? 'https://storedb-api.onrender.com' : 'http://localhost:3000',
       },
     ],
+    components: { // Agrega esta sección para especificar el esquema de autorización
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [{ bearerAuth: [] }],
   },
   apis: ['./routes/*.js'], // Ruta donde están tus archivos de enrutamiento (puedes ajustarla según tus necesidades)
 };
