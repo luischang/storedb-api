@@ -20,9 +20,9 @@ app.use('/categories', categoryRouter);
 // Otros enrutadores para cada entidad...
 
 // Configuración de Swagger
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(specs));
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor iniciado en http://localhost:${PORT}`);
+  console.log(`Servidor iniciado en el puerto ${PORT}`);
 });
