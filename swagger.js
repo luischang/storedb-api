@@ -13,7 +13,7 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000', // Cambia esto a la URL de tu servidor
+        url: environment === 'production' ? 'https://storedb-api.onrender.com' : 'http://localhost:3000',
       },
     ],
   },
