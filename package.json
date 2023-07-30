@@ -8,6 +8,9 @@
   },
   "author": "Luis Chang",
   "license": "ISC",
+  "engines": {
+    "node": "18.12.1"
+  },
   "dependencies": {
     "express": "^4.18.2",
     "mysql2": "^3.5.2",
