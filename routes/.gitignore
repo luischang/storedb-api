@@ -1,0 +1,51 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Logs
+logs
+*.log
+
+# Dependency directories
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Build results
+dist
+build
+out
+*.msi
+*.msix
+*.msm
+*.msp
+*.exe
+*.dll
+*.pdb
+*.ipa
+*.apk
+*.clasp.json
+
+# WebStorm
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# .env file (contiene información sensible)
+.env
+.env.*
+
+# OS generated files
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
