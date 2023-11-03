@@ -2,10 +2,12 @@
 
 const express = require('express');
 const app = express();
+const cors = require('cors'); // Importa el paquete CORS
 
 const { specs, swaggerUi } = require('./swagger');
 
 app.use(express.json());
+app.use(cors());
 
 // Importa los enrutadores de cada entidad
 const userRouter = require('./routes/user');
