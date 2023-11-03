@@ -93,7 +93,7 @@ const signIn = (email, password) => {
         const passwordMatch = await bcrypt.compare(password, user.Password);
         if (passwordMatch) {
           // Si la contraseña coincide, generar un JWT con la información básica del usuario
-          const token = jwt.sign({ userId: user.Id }, 'SK_ABC123EFG456HIJ789', { expiresIn: '1h' });
+          const token = jwt.sign({ userId: user.Id }, 'SK_ABC123EFG456HIJ789', { expiresIn: '24h' });
 
           // Devolver la información básica del usuario y el token JWT
           resolve({
