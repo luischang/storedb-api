@@ -13,13 +13,25 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 });
 
+// Leer todas las asignaciones por MonthNum y/o YearNum
+router.get('/filter', authMiddleware, async (req, res) => {
+    const { monthNum, yearNum } = req.query;
+    console.log("estoy en filter")
+    try {
+      const assignments = await assignmentController.getAssignmentsByMonthAndYear(monthNum, yearNum);
+      res.json(assignments);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener las asignaciones filtradas' });
+    }
+  });
+
 // Leer una asignación por su ID
 router.get('/:id', authMiddleware, async (req, res) => {
   const assignmentId = req.params.id;
   try {
     const assignment = await assignmentController.getAssignmentById(assignmentId);
     if (assignment === null) {
-      res.status(404).json({ error: 'Asignación no encontrada' });
+      res.status(404).json({ error: 'Asignación no encontrada 1' });
     } else {
       res.json(assignment);
     }
@@ -48,7 +60,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
     if (success) {
       res.json({ message: 'Asignación actualizada con éxito' });
     } else {
-      res.status(404).json({ error: 'Asignación no encontrada' });
+      res.status(404).json({ error: 'Asignación no encontrada 2' });
     }
   } catch (error) {
     res.status(500).json({ error: 'Error al actualizar la asignación' });
@@ -63,22 +75,13 @@ router.delete('/:id', authMiddleware, async (req, res) => {
     if (success) {
       res.json({ message: 'Asignación eliminada con éxito' });
     } else {
-      res.status(404).json({ error: 'Asignación no encontrada' });
+      res.status(404).json({ error: 'Asignación no encontrada 3' });
     }
   } catch (error) {
     res.status(500).json({ error: 'Error al eliminar la asignación' });
   }
 });
 
-// Leer todas las asignaciones por MonthNum y/o YearNum
-router.get('/filter', authMiddleware, async (req, res) => {
-  const { monthNum, yearNum } = req.query;
-  try {
-    const assignments = await assignmentController.getAssignmentsByMonthAndYear(monthNum, yearNum);
-    res.json(assignments);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener las asignaciones filtradas' });
-  }
-});
+
 
 module.exports = router;
