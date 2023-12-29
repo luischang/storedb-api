@@ -12,6 +12,74 @@ const getAllRequests = () => {
   });
 };
 
+// READ (Obtener todas las solicitudes de cambio de turno con detalles de participantes y asignaciones)
+const getAllRequestsWithDetails = () => {
+  return new Promise((resolve, reject) => {
+    connection.query(`
+      SELECT
+        rct.Id,
+        rct.ParticipantRequesterId,
+        pr.FullName AS RequesterFullName,
+        pr.TypeUser AS RequesterTypeUser,
+        pr.DocumentNro AS RequesterDocumentNro,
+        rct.ParticipantDestinationId,
+        pd.FullName AS DestinationFullName,
+        pd.TypeUser AS DestinationTypeUser,
+        pd.DocumentNro AS DestinationDocumentNro,
+        rct.AssignmentRequesterId,
+        pr.TypeUser AS RequesterParticipantType,
+        ar.TurnTypeId AS RequesterTurnTypeId,
+        ar.AssignDate AS RequesterAssignDate,
+        rct.AssignmentDestinationId,
+        pd.TypeUser AS DestinationParticipantType,
+        ad.TurnTypeId AS DestinationTurnTypeId,
+        ad.AssignDate AS DestinationAssignDate,
+        rct.Status,
+        rct.CreationDateTime,
+        rct.ApprovalDateTime
+      FROM RequestChangeTurn rct
+      JOIN Participant pr ON rct.ParticipantRequesterId = pr.Id
+      JOIN Participant pd ON rct.ParticipantDestinationId = pd.Id
+      JOIN Assignment ar ON rct.AssignmentRequesterId = ar.Id
+      JOIN Assignment ad ON rct.AssignmentDestinationId = ad.Id
+    `, (err, results) => {
+      if (err) reject(err);
+      console.log(results)
+      // Mapear los resultados a un formato deseado
+      const formattedResults = results.map(result => ({
+        Id: result.Id,
+        ParticipantRequester: {
+          ParticipantId: result.ParticipantRequesterId,
+          FullName: result.RequesterFullName,
+          TypeUser: result.RequesterTypeUser,
+          DocumentNro: result.RequesterDocumentNro
+        },
+        ParticipantDestination: {
+          ParticipantId: result.ParticipantDestinationId,
+          FullName: result.DestinationFullName,
+          TypeUser: result.DestinationTypeUser,
+          DocumentNro: result.DestinationDocumentNro
+        },
+        AssignmentRequester: {
+          ParticipantType: result.RequesterParticipantType,
+          TurnTypeId: result.RequesterTurnTypeId,
+          AssignDate: result.RequesterAssignDate
+        },
+        AssignmentDestination: {
+          ParticipantType: result.DestinationParticipantType,
+          TurnTypeId: result.DestinationTurnTypeId,
+          AssignDate: result.DestinationAssignDate
+        },
+        Status: result.Status,
+        CreationDateTime: result.CreationDateTime,
+        ApprovalDateTime: result.ApprovalDateTime
+      }));
+
+      resolve(formattedResults);
+    });
+  });
+};
+
 // READ (Obtener una solicitud por su ID)
 const getRequestById = (requestId) => {
   return new Promise((resolve, reject) => {
@@ -130,4 +198,5 @@ const approveRequest = async (requestId) => {
     deleteRequest,
     approveRequest,
     denyRequest,
+    getAllRequestsWithDetails,
   };

@@ -3,6 +3,17 @@ const router = express.Router();
 const requestChangeTurnController = require('../controllers/requestChangeTurnController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
+// Obtener todas las solicitudes de cambio de turno con detalles
+router.get('/details', authMiddleware, async (req, res) => {
+  try {
+    console.log("Entro a details")
+    const requests = await requestChangeTurnController.getAllRequestsWithDetails();
+    res.json(requests);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener las solicitudes de cambio de turno con detalles' });
+  }
+});
+
 // Obtener todas las solicitudes de cambio de turno
 router.get('/', authMiddleware, async (req, res) => {
   try {
@@ -83,5 +94,7 @@ router.put('/approve/:id', authMiddleware, async (req, res) => {
       res.status(500).json({ error: 'Error al denegar la solicitud de cambio de turno' });
     }
   });
+
+
 
 module.exports = router;

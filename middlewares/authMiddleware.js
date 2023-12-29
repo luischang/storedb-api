@@ -12,9 +12,9 @@ const authMiddleware = (req, res, next) => {
   const token = authHeader.substring(7); // Elimina los primeros 7 caracteres ("Bearer ")
 
   try {
-    console.log("antes " + token);
+    //console.log("antes1 " + token);
     const decodedToken = jwt.verify(token, secretKey);
-    console.log(decodedToken)
+    //console.log(decodedToken)
     req.user = decodedToken;
     next();
   } catch (error) {
