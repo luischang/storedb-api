@@ -20,6 +20,7 @@ const categoryRouter = require('./routes/category');
 const participantRouter = require('./routes/participant');
 const turnTypeRouter = require('./routes/turntype');
 const assignmentRouter = require('./routes/assignment');
+const requestChangeTurnRouter = require('./routes/requestchangeturn');
 // Otros enrutadores para cada entidad...
 
 // Usa los enrutadores
@@ -29,6 +30,7 @@ app.use('/categories', categoryRouter);
 app.use('/participants', participantRouter);
 app.use('/turntype', turnTypeRouter);
 app.use('/assignment', assignmentRouter);
+app.use('/requestchangeturn', requestChangeTurnRouter);
 // Otros enrutadores para cada entidad...
 
 // Configuración de Swagger

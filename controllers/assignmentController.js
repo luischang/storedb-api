@@ -182,6 +182,20 @@ const getAssignmentsByMonthAndYear = (monthNum, yearNum) => {
   });
 };
 
+// Intercambiar ParticipantId en las asignaciones
+const exchangeParticipants = (assignmentRequesterId, assignmentDestinationId, participantRequesterId, participantDestinationId) => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      'UPDATE Assignment SET ParticipantId = CASE WHEN Id = ? THEN ? WHEN Id = ? THEN ? ELSE ParticipantId END WHERE Id IN (?, ?)',
+      [assignmentRequesterId, participantDestinationId, assignmentDestinationId, participantRequesterId, assignmentRequesterId, assignmentDestinationId],
+      (err, results) => {
+        if (err) reject(err);
+        resolve(results.affectedRows > 0);
+      }
+    );
+  });
+};
+
 module.exports = {
   getAllAssignments,
   getAssignmentById,
@@ -189,4 +203,5 @@ module.exports = {
   updateAssignment,
   deleteAssignment,
   getAssignmentsByMonthAndYear,
+  exchangeParticipants,
 };
