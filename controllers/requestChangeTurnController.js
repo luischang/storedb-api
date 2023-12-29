@@ -44,7 +44,6 @@ const getAllRequestsWithDetails = () => {
       JOIN Assignment ad ON rct.AssignmentDestinationId = ad.Id
     `, (err, results) => {
       if (err) reject(err);
-      console.log(results)
       // Mapear los resultados a un formato deseado
       const formattedResults = results.map(result => ({
         Id: result.Id,

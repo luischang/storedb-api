@@ -6,7 +6,6 @@ const authMiddleware = require('../middlewares/authMiddleware');
 // Obtener todas las solicitudes de cambio de turno con detalles
 router.get('/details', authMiddleware, async (req, res) => {
   try {
-    console.log("Entro a details")
     const requests = await requestChangeTurnController.getAllRequestsWithDetails();
     res.json(requests);
   } catch (error) {
