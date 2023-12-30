@@ -26,6 +26,24 @@ const getAssignmentById = (assignmentId) => {
   });
 };
 
+// READ (Obtener una asignación por ParticipantId y AssignDate)
+const getAssignmentByParticipantAndDate = (participantId, assignDate) => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      "SELECT ag.Id AS AssignmentId, tt.Id AS TurnId, CONCAT(tt.ShortDescription, ' (', tt.HourNum, ' hours)') AS TurnDescription " +
+      "FROM Assignment ag " +
+      "JOIN TurnType tt ON ag.TurnTypeId = tt.Id " +
+      "WHERE ag.ParticipantId = ? AND ag.AssignDate = ?",
+      [participantId, assignDate],
+      (err, results) => {
+        if (err) reject(err);
+        if (results.length === 0) resolve(null);
+        resolve(results[0]);
+      }
+    );
+  });
+};
+
 // CREATE (Crear una nueva asignación)
 const createAssignment = (assignment) => {
   return new Promise((resolve, reject) => {
@@ -204,4 +222,5 @@ module.exports = {
   deleteAssignment,
   getAssignmentsByMonthAndYear,
   exchangeParticipants,
+  getAssignmentByParticipantAndDate,
 };

@@ -25,6 +25,22 @@ router.get('/filter', authMiddleware, async (req, res) => {
     }
   });
 
+  // Ruta para obtener una asignación por ParticipantId y AssignDate
+router.get('/byParticipantAndDate', authMiddleware, async (req, res) => {
+  const { participantId, assignDate } = req.query;
+  console.log("byParticipantAndDate")
+  try {
+    const assignment = await assignmentController.getAssignmentByParticipantAndDate(participantId, assignDate);
+    if (assignment === null) {
+      res.status(404).json({ error: 'Asignación no encontrada' });
+    } else {
+      res.json(assignment);
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener la asignación por ParticipantId y AssignDate' });
+  }
+});
+
 // Leer una asignación por su ID
 router.get('/:id', authMiddleware, async (req, res) => {
   const assignmentId = req.params.id;
