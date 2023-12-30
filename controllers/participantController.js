@@ -41,15 +41,16 @@ const getAllParticipantsRequestCountsByMonth = () => {
       P.Id AS ParticipantId,
       P.FullName AS ParticipantName,
       MONTH(Ass.AssignDate) AS Month,
-      Year(Ass.AssignDate) AS Year,
-      COUNT(*) AS Total,
+      YEAR(Ass.AssignDate) AS Year,
+      COUNT(DISTINCT RCT.Id) AS Total,
       SUM(CASE WHEN RCT.Status = 'APROBADO' THEN 1 ELSE 0 END) AS Aprobado,
       SUM(CASE WHEN RCT.Status = 'DENEGADO' THEN 1 ELSE 0 END) AS Denegado,
       SUM(CASE WHEN RCT.Status = 'PENDIENTE' THEN 1 ELSE 0 END) AS Pendiente,
       DATE_FORMAT(Ass.AssignDate, '%M %Y') AS MonthYearName
     FROM Participant AS P
-    INNER JOIN RequestChangeTurn AS RCT ON P.Id = RCT.ParticipantRequesterId OR P.Id = RCT.ParticipantDestinationId
-    LEFT JOIN Assignment AS Ass ON P.Id = Ass.ParticipantId
+    INNER JOIN Assignment AS Ass ON P.Id = Ass.ParticipantId
+    INNER JOIN RequestChangeTurn AS RCT ON (P.Id = RCT.ParticipantRequesterId OR P.Id = RCT.ParticipantDestinationId)
+        AND (Ass.Id = RCT.AssignmentRequesterId OR Ass.Id = RCT.AssignmentDestinationId)
     GROUP BY P.Id, MONTH(Ass.AssignDate)
     `;
 
