@@ -12,6 +12,26 @@ router.get('/', authMiddleware, async (req, res) => {
     }
   });
 
+// Obtener la cantidad de solicitudes por mes
+router.get('/requestCountsByMonth', authMiddleware, async (req, res) => {
+  try {
+    const requestCountsByMonth = await participantController.getRequestCountsByMonth();
+    res.json(requestCountsByMonth);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener la cantidad de solicitudes por mes' });
+  }
+});
+
+// Obtener todos los participantes con sus solicitudes detalladas
+router.get('/allParticipantsRequestCountsByMonth', authMiddleware, async (req, res) => {
+  try {
+    const participantsDetailedInfo = await participantController.getAllParticipantsRequestCountsByMonth();
+    res.json(participantsDetailedInfo);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener la información detallada de los participantes' });
+  }
+});
+
   // Agregar un nuevo participante
 router.post('/', authMiddleware, async (req, res) => {
   try {
