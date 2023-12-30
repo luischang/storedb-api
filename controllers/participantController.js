@@ -37,19 +37,20 @@ const getRequestCountsByMonth = (participantId) => {
 const getAllParticipantsRequestCountsByMonth = () => {
   return new Promise((resolve, reject) => {
     const query = `
-      SELECT 
-        P.Id AS ParticipantId,
-        P.FullName AS ParticipantName,
-        MONTH(RCT.CreationDateTime) AS Month,
-        YEAR(RCT.CreationDateTime) AS Year,
-        COUNT(*) AS Total,
-        SUM(CASE WHEN RCT.Status = 'APROBADO' THEN 1 ELSE 0 END) AS Aprobado,
-        SUM(CASE WHEN RCT.Status = 'DENEGADO' THEN 1 ELSE 0 END) AS Denegado,
-        SUM(CASE WHEN RCT.Status = 'PENDIENTE' THEN 1 ELSE 0 END) AS Pendiente,
-        DATE_FORMAT(RCT.CreationDateTime, '%M %Y') AS MonthYearName
-      FROM Participant AS P
-      INNER JOIN RequestChangeTurn AS RCT ON P.Id = RCT.ParticipantRequesterId OR P.Id = RCT.ParticipantDestinationId
-      GROUP BY P.Id, MONTH(RCT.CreationDateTime), YEAR(RCT.CreationDateTime)
+    SELECT 
+      P.Id AS ParticipantId,
+      P.FullName AS ParticipantName,
+      MONTH(Ass.AssignDate) AS Month,
+      Year(Ass.AssignDate) AS Year,
+      COUNT(*) AS Total,
+      SUM(CASE WHEN RCT.Status = 'APROBADO' THEN 1 ELSE 0 END) AS Aprobado,
+      SUM(CASE WHEN RCT.Status = 'DENEGADO' THEN 1 ELSE 0 END) AS Denegado,
+      SUM(CASE WHEN RCT.Status = 'PENDIENTE' THEN 1 ELSE 0 END) AS Pendiente,
+      DATE_FORMAT(Ass.AssignDate, '%M %Y') AS MonthYearName
+    FROM Participant AS P
+    INNER JOIN RequestChangeTurn AS RCT ON P.Id = RCT.ParticipantRequesterId OR P.Id = RCT.ParticipantDestinationId
+    LEFT JOIN Assignment AS Ass ON P.Id = Ass.ParticipantId
+    GROUP BY P.Id, MONTH(Ass.AssignDate)
     `;
 
     connection.query(query, (err, results) => {
