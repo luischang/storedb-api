@@ -2,7 +2,7 @@
 
 const express = require('express');
 const app = express();
-const cors = require('cors'); // Importa el paquete CORS
+const cors = require('cors');
 const moment = require('moment-timezone');
 
 // Establecer la zona horaria global
@@ -21,20 +21,25 @@ const participantRouter = require('./routes/participant');
 const turnTypeRouter = require('./routes/turntype');
 const assignmentRouter = require('./routes/assignment');
 const requestChangeTurnRouter = require('./routes/requestchangeturn');
+
 // Otros enrutadores para cada entidad...
 
-// Usa los enrutadores
-app.use('/users', userRouter);
-app.use('/products', productRouter);
-app.use('/categories', categoryRouter);
-app.use('/participants', participantRouter);
-app.use('/turntype', turnTypeRouter);
-app.use('/assignment', assignmentRouter);
-app.use('/requestchangeturn', requestChangeTurnRouter);
+// Crea un enrutador para la API Node.js con la ruta base '/node-api'
+const nodeApiRouter = express.Router();
+nodeApiRouter.use('/users', userRouter);
+nodeApiRouter.use('/products', productRouter);
+nodeApiRouter.use('/categories', categoryRouter);
+nodeApiRouter.use('/participants', participantRouter);
+nodeApiRouter.use('/turntype', turnTypeRouter);
+nodeApiRouter.use('/assignment', assignmentRouter);
+nodeApiRouter.use('/requestchangeturn', requestChangeTurnRouter);
 // Otros enrutadores para cada entidad...
+
+// Agrega el enrutador de la API Node.js a la ruta base '/node-api'
+app.use('/node-api', nodeApiRouter);
 
 // Configuración de Swagger
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(specs));
+app.use('/node-api/swagger', swaggerUi.serve, swaggerUi.setup(specs));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

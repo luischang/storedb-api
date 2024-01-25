@@ -16,7 +16,6 @@ router.get('/', authMiddleware, async (req, res) => {
 // Leer todas las asignaciones por MonthNum y/o YearNum
 router.get('/filter', authMiddleware, async (req, res) => {
     const { monthNum, yearNum } = req.query;
-    console.log("estoy en filter")
     try {
       const assignments = await assignmentController.getAssignmentsByMonthAndYear(monthNum, yearNum);
       res.json(assignments);
@@ -28,7 +27,6 @@ router.get('/filter', authMiddleware, async (req, res) => {
   // Ruta para obtener una asignación por ParticipantId y AssignDate
 router.get('/byParticipantAndDate', authMiddleware, async (req, res) => {
   const { participantId, assignDate } = req.query;
-  console.log("byParticipantAndDate")
   try {
     const assignment = await assignmentController.getAssignmentByParticipantAndDate(participantId, assignDate);
     if (assignment === null) {
